@@ -2,6 +2,7 @@
 //
 
 #include <iostream>
+#include <chrono>
 
 #include "Game.h"
 #include "MCTS.h"
@@ -14,10 +15,14 @@ int main()
 
 	char winner = state.winner();
 	cout << state << endl;
-	while (winner == '-') {
+	while (!state.isTerminal()) {
 		MCTS mcts(state);
 
+		auto timeStart = chrono::steady_clock::now();
 		mcts.runSearch();
+		auto timeEnd = chrono::steady_clock::now();
+		auto diff = timeEnd - timeStart;
+
 		try {
 			auto play = mcts.bestMove();
 			state.applyMove(play);
@@ -25,7 +30,8 @@ int main()
 		catch (exception & e) {
 			cerr << e.what() << endl;
 		}
-		cout << state << endl;;
+		cout << "This move took " << chrono::duration<double, milli>(diff).count() << "ms" << endl; // print benchmark
+		cout << state << endl;
 		winner = state.winner();
 	}
 
