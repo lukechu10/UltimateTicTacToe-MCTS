@@ -2,11 +2,16 @@
 
 #include "Node.h"
 
+struct SearchResult {
+	int iterations = 0;
+	SearchResult(int iterations) { this->iterations = iterations; }
+};
+
 class MCTS {
 public:
 	Node* traverse();
 
-	void runSearch();
+	SearchResult runSearch(double timeout = 1000);
 
 	Game::Play bestMove();
 

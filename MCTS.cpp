@@ -1,4 +1,5 @@
 #include <exception>
+#include <chrono>
 
 #include "MCTS.h"
 
@@ -15,17 +16,27 @@ Node* MCTS::traverse() {
 	return node;
 }
 
-void MCTS::runSearch() {
+SearchResult MCTS::runSearch(double timeout) {
 	// run 4 phases until no more time left
-	int i = 0;
-	while (++i < 1000000) {
+	int iterations = 0;
+	auto timeStart = chrono::steady_clock::now();
+	while (true) {
+		// check if timeout exceeded
+		auto timeNow = chrono::steady_clock::now();
+		auto diff = timeNow - timeStart;
+		if (chrono::duration<double, milli>(diff).count() > timeout) break; // timeout exceeded
+
 		// run 100 simulations
 		Node* node = traverse(); // phase 1 - selection
 		if (node->fullyExpanded()) break; // entire tree is searched
 		Node* expandedNode = node->expand(); // phase 2 - expansion
 		char winner = expandedNode->simulate(); // phase 3 - simulation
 		expandedNode->backpropagate(winner);
+
+		iterations++;
 	}
+
+	return SearchResult(iterations);
 }
 
 Game::Play MCTS::bestMove() {

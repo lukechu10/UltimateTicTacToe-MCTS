@@ -19,7 +19,7 @@ int main()
 		MCTS mcts(state);
 
 		auto timeStart = chrono::steady_clock::now();
-		mcts.runSearch();
+		SearchResult searchRes = mcts.runSearch();
 		auto timeEnd = chrono::steady_clock::now();
 		auto diff = timeEnd - timeStart;
 
@@ -30,7 +30,7 @@ int main()
 		catch (exception & e) {
 			cerr << e.what() << endl;
 		}
-		cout << "This move took " << chrono::duration<double, milli>(diff).count() << "ms" << endl; // print benchmark
+		cout << "This move took " << chrono::duration<double, milli>(diff).count() << "ms. Simulated " << searchRes.iterations << " game(s)." << endl; // print benchmark
 		cout << state << endl;
 		winner = state.winner();
 	}
