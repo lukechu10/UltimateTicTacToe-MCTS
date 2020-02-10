@@ -1,5 +1,6 @@
 #include <exception>
 #include <chrono>
+#include <stdexcept>
 
 #include "MCTS.h"
 
@@ -42,7 +43,7 @@ SearchResult MCTS::runSearch(double timeout) {
 Game::Play MCTS::bestMove() {
 	// check if root is fully expanded
 	if (!root->fullyExpanded()) {
-		throw exception("Root is not fully expanded. There is not enough information");
+		throw runtime_error("Root is not fully expanded. There is not enough information");
 	}
 	// find child with most visits
 	int visitsBest = 0;
