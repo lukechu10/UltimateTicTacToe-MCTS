@@ -3,21 +3,21 @@
 #include "Node.h"
 
 struct SearchResult {
-    int iterations = 0;
-    SearchResult(int iterations) { this->iterations = iterations; }
+	int iterations = 0;
+	SearchResult(int iterations) { this->iterations = iterations; }
 };
 
 class MCTS {
    public:
-    Node* traverse();
+	Node* traverse();
 
-    SearchResult runSearch(double timeout = 1000);
+	SearchResult runSearch(double timeout = 1000);
 
-    Game::Play bestMove();
+	Game::Play bestMove();
 
-    MCTS(Game g) { root = new Node(nullptr, g); }
-    ~MCTS() { delete root; }
+	MCTS(Game g) { root = new Node(nullptr, g); }
+	~MCTS() { delete root; }
 
    private:
-    Node* root;
+	Node* root;
 };

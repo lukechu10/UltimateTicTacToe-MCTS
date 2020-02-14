@@ -3,7 +3,7 @@ OBJ_DIR := ./obj
 SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 LDFLAGS :=
-CPPFLAGS := -O3 -Wall
+CPPFLAGS := -Wall
 CXXFLAGS := 
 EXECUTABLE := $(OBJ_DIR)/main.out
 

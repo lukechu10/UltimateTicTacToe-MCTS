@@ -11,50 +11,50 @@
 using namespace std;
 
 Game::Play getMoveFromInput() {
-    int row, col;
-    cout << "Enter row (1-3):\n";
-    cin >> row;
-    cout << "Enter col (1-3):\n";
-    cin >> col;
+	int row, col;
+	cout << "Enter row (1-3):\n";
+	cin >> row;
+	cout << "Enter col (1-3):\n";
+	cin >> col;
 
-    if (row < 1 || row > 3 || col < 1 || col > 3) {
-	cerr << "Invalid input!\n";
-	return getMoveFromInput();
-    }
+	if (row < 1 || row > 3 || col < 1 || col > 3) {
+		cerr << "Invalid input!\n";
+		return getMoveFromInput();
+	}
 
-    return Game::Play(row, col);
+	return Game::Play(row, col);
 }
 
 int main() {
-    Game state;
+	Game state;
 
-    char winner = state.winner();
-    cout << state << endl;
-    while (!state.isTerminal()) {
-	MCTS mcts(state);
-
-	auto timeStart = chrono::steady_clock::now();
-	SearchResult searchRes = mcts.runSearch();
-	auto timeEnd = chrono::steady_clock::now();
-	auto diff = timeEnd - timeStart;
-
-	try {
-	    auto play = mcts.bestMove();
-	    state.applyMove(play);
-	} catch (exception &e) {
-	    cerr << e.what() << endl;
-	}
-	cout << "This move took "
-	     << chrono::duration<double, milli>(diff).count()
-	     << "ms. Simulated " << searchRes.iterations << " game(s)."
-	     << endl;  // print benchmark
+	char winner = state.winner();
 	cout << state << endl;
-	winner = state.winner();
-    }
+	while (!state.isTerminal()) {
+		MCTS mcts(state);
 
-    cout << winner;
+		auto timeStart = chrono::steady_clock::now();
+		SearchResult searchRes = mcts.runSearch();
+		auto timeEnd = chrono::steady_clock::now();
+		auto diff = timeEnd - timeStart;
 
-    return 0;
+		try {
+			auto play = mcts.bestMove();
+			state.applyMove(play);
+		} catch (exception &e) {
+			cerr << e.what() << endl;
+		}
+		cout << "This move took "
+			 << chrono::duration<double, milli>(diff).count()
+			 << "ms. Simulated " << searchRes.iterations << " game(s)."
+			 << endl;  // print benchmark
+		cout << state << endl;
+		winner = state.winner();
+	}
+
+	cout << winner;
+
+	return 0;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
