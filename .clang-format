@@ -1,0 +1,5 @@
+BasedOnStyle: Google
+AllowShortIfStatementsOnASingleLine: true
+IndentWidth: 4
+Language: Cpp
+UseTab: Always
