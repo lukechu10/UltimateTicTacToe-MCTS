@@ -22,6 +22,7 @@ Node *Node::expand() {
 	uniform_int_distribution<int> distribution(0, unexpandedNodes.size() - 1);
 	int i = distribution(generator);
 	Game::Play play = unexpandedNodes[i];
+	
 	unexpandedNodes.erase(unexpandedNodes.begin() + i);
 	// expand node
 	Game state(this->state);

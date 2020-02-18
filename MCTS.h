@@ -3,8 +3,24 @@
 #include "Node.h"
 
 struct SearchResult {
-	int iterations = 0;
-	SearchResult(int iterations) { this->iterations = iterations; }
+	int visits = 0;
+	int wins = 0;
+	SearchResult(int visits, int wins) {
+		this->visits = visits;
+		this->wins = wins;
+		
+	}
+};
+
+struct BestResult {
+	int bestVisits = 0;
+	int bestWins = 0;
+	Game::Play bestPlay;
+	BestResult(int bestVisits, int bestWins, Game::Play bestPlay) {
+		this->bestVisits = bestVisits;
+		this->bestWins = bestWins;
+		this->bestPlay = bestPlay;
+	}
 };
 
 class MCTS {
@@ -13,7 +29,7 @@ class MCTS {
 
 	SearchResult runSearch(double timeout = 1000);
 
-	Game::Play bestMove();
+	BestResult bestMove(std::string policy = "robust");
 
 	MCTS(Game g) { root = new Node(nullptr, g); }
 	~MCTS() { delete root; }

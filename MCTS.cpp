@@ -1,6 +1,7 @@
 #include "MCTS.h"
 
 #include <chrono>
+#include <cmath>
 #include <exception>
 #include <stdexcept>
 
@@ -31,33 +32,53 @@ SearchResult MCTS::runSearch(double timeout) {
 			break;	// timeout exceeded
 
 		// run 100 simulations
-		Node *node = traverse();				 // phase 1 - selection
-		if (node->fullyExpanded()) break;		 // entire tree is searched
-		Node *expandedNode = node->expand();	 // phase 2 - expansion
-		char winner = expandedNode->simulate();	 // phase 3 - simulation
-		expandedNode->backpropagate(winner);
-
+		Node *node = traverse();  // phase 1 - selection
+		if (node->fullyExpanded()) {
+			char winner = node->simulate();
+			node->backpropagate(winner);
+		}  // backpropagate without expanding
+		else {
+			Node *expandedNode = node->expand();	 // phase 2 - expansion
+			char winner = expandedNode->simulate();	 // phase 3 - simulation
+			expandedNode->backpropagate(winner);
+		}
 		iterations++;
 	}
 
-	return SearchResult(iterations);
+	return SearchResult(iterations, root->winCount());
 }
 
-Game::Play MCTS::bestMove() {
+BestResult MCTS::bestMove(string policy) {
 	// check if root is fully expanded
 	if (!root->fullyExpanded()) {
 		throw runtime_error(
 			"Root is not fully expanded. There is not enough information");
 	}
-	// find child with most visits
+	// find best child
 	int visitsBest = 0;
+	int winsBest = 0;
 	Game::Play bestPlay;
-	for (auto &child : root->getChildren()) {
-		if (child->visitCount() > visitsBest) {
-			visitsBest = child->visitCount();
-			bestPlay = child->getState().lastPlay();
+
+	if (policy == "robust") {
+		for (auto &child : root->getChildren()) {
+			if (child->visitCount() > visitsBest) {
+				visitsBest = child->visitCount();
+				winsBest = child->winCount();
+				bestPlay = child->getState().lastPlay();
+			}
+		}
+	} else if (policy == "max") {
+		double bestRatio = -INFINITY;
+		for (auto &child : root->getChildren()) {
+			double ratio = child->winCount() / child->visitCount();
+			if (ratio > bestRatio) {
+				bestRatio = ratio;
+				visitsBest = child->visitCount();
+				winsBest = child->winCount();
+				bestPlay = child->getState().lastPlay();
+			}
 		}
 	}
 
-	return bestPlay;
+	return BestResult(visitsBest, winsBest, bestPlay);
 }

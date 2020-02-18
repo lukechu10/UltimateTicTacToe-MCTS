@@ -29,9 +29,9 @@ class Game {
 
 	std::vector<Play> moves() const;
 
-	void applyMove(Play m) {
+	void applyMove(Play& m) {
 		board[m.row][m.col] = playerToMove_;
-		playerToMove_ = (playerToMove_ == 'x' ? 'o' : 'x');
+		playerToMove_ = (playerToMove_ == 'x' ? 'o' : 'x'); // flip next player
 		lastPlay_ = m;
 	}
 

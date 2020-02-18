@@ -34,25 +34,33 @@ int main() {
 		MCTS mcts(state);
 
 		auto timeStart = chrono::steady_clock::now();
-		SearchResult searchRes = mcts.runSearch();
+		SearchResult searchRes = mcts.runSearch(20);
 		auto timeEnd = chrono::steady_clock::now();
 		auto diff = timeEnd - timeStart;
 
 		try {
-			auto play = mcts.bestMove();
-			state.applyMove(play);
+			// cerr << state.playerToMove();
+			auto play =
+				mcts.bestMove("robust");
+			
+			state.applyMove(play.bestPlay);
+
+			cout << "This move took "
+				 << chrono::duration<double, milli>(diff).count() << "ms"
+				 << endl;  // print benchmark
+			cout << "Root stats\tvisits: " << searchRes.visits
+				 << "\twins: " << searchRes.wins << endl;  // stats
+			cout << "Best Play stats\tvisits: " << play.bestVisits
+				 << "\twins: " << play.bestWins << endl;
 		} catch (exception &e) {
 			cerr << e.what() << endl;
 		}
-		cout << "This move took "
-			 << chrono::duration<double, milli>(diff).count()
-			 << "ms. Simulated " << searchRes.iterations << " game(s)."
-			 << endl;  // print benchmark
+
 		cout << state << endl;
 		winner = state.winner();
 	}
 
-	cout << winner;
+	cout << "Winner: " << winner << endl;
 
 	return 0;
 }
