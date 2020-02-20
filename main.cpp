@@ -28,21 +28,27 @@ Game::Play getMoveFromInput() {
 int main() {
 	Game state;
 
+	double sims = 0;
+	int iterations = 0;
+	constexpr int timeout = 50;
+
 	char winner = state.winner();
 	cout << state << endl;
 	while (!state.isTerminal()) {
 		MCTS mcts(state);
 
 		auto timeStart = chrono::steady_clock::now();
-		SearchResult searchRes = mcts.runSearch(20);
+		SearchResult searchRes = mcts.runSearch(timeout);
 		auto timeEnd = chrono::steady_clock::now();
 		auto diff = timeEnd - timeStart;
 
 		try {
 			// cerr << state.playerToMove();
-			auto play =
-				mcts.bestMove("robust");
-			
+			auto play = mcts.bestMove("robust");
+
+			iterations++;
+			sims += searchRes.visits;
+
 			state.applyMove(play.bestPlay);
 
 			cout << "This move took "
@@ -62,6 +68,8 @@ int main() {
 
 	cout << "Winner: " << winner << endl;
 
+	cout << "Average simulations in " << timeout << "ms: " << sims / iterations
+		 << endl;
 	return 0;
 }
 

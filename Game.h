@@ -31,7 +31,7 @@ class Game {
 
 	void applyMove(Play& m) {
 		board[m.row][m.col] = playerToMove_;
-		playerToMove_ = (playerToMove_ == 'x' ? 'o' : 'x'); // flip next player
+		playerToMove_ = (playerToMove_ == 'x' ? 'o' : 'x');	 // flip next player
 		lastPlay_ = m;
 	}
 

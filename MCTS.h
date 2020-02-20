@@ -8,7 +8,6 @@ struct SearchResult {
 	SearchResult(int visits, int wins) {
 		this->visits = visits;
 		this->wins = wins;
-		
 	}
 };
 

@@ -1,5 +1,7 @@
 #include "Node.h"
 
+#include <algorithm>
+
 using namespace std;
 
 Node *Node::selectBestChildUCT() {
@@ -18,12 +20,8 @@ Node *Node::selectBestChildUCT() {
 }
 
 Node *Node::expand() {
-	// select random unexpanded node
-	uniform_int_distribution<int> distribution(0, unexpandedNodes.size() - 1);
-	int i = distribution(generator);
-	Game::Play play = unexpandedNodes[i];
-	
-	unexpandedNodes.erase(unexpandedNodes.begin() + i);
+	Game::Play play = unexpandedNodes[unexpandedNodes.size() - 1];
+	unexpandedNodes.pop_back();
 	// expand node
 	Game state(this->state);
 	state.applyMove(play);
@@ -68,6 +66,8 @@ Node::Node(Node *parent, Game state) {
 
 	// compute unexpanded nodes
 	unexpandedNodes = state.moves();
+	// shuffle
+	shuffle(unexpandedNodes.begin(), unexpandedNodes.end(), generator);
 }
 
 Node::~Node() {
