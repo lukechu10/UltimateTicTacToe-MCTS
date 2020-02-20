@@ -22,7 +22,7 @@ class Node {
 	bool isLeaf();
 
 	// constructor
-	Node(Node *parent, Game state);
+	Node(Node *parent, const Game &state);
 	~Node();
 
    private:

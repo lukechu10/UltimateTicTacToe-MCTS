@@ -60,7 +60,7 @@ bool Node::fullyExpanded() { return unexpandedNodes.size() == 0; }
 
 bool Node::isLeaf() { return state.isTerminal(); }
 
-Node::Node(Node *parent, Game state) {
+Node::Node(Node *parent, const Game &state) {
 	this->parent = parent;
 	this->state = state;
 
