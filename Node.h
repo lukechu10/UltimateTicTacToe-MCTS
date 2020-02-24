@@ -29,7 +29,7 @@ class Node {
 	Node *parent;
 
 	std::vector<Node *> children;
-	std::vector<Game::Play> unexpandedNodes;
+	std::vector<Play> unexpandedNodes;
 	Game state;
 
 	double wins = 0;

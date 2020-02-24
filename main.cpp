@@ -10,20 +10,20 @@
 
 using namespace std;
 
-Game::Play getMoveFromInput() {
-	int row, col;
-	cout << "Enter row (1-3):\n";
-	cin >> row;
-	cout << "Enter col (1-3):\n";
-	cin >> col;
+// Game::Play getMoveFromInput() {
+// 	int row, col;
+// 	cout << "Enter row (1-3):\n";
+// 	cin >> row;
+// 	cout << "Enter col (1-3):\n";
+// 	cin >> col;
 
-	if (row < 1 || row > 3 || col < 1 || col > 3) {
-		cerr << "Invalid input!\n";
-		return getMoveFromInput();
-	}
+// 	if (row < 1 || row > 3 || col < 1 || col > 3) {
+// 		cerr << "Invalid input!\n";
+// 		return getMoveFromInput();
+// 	}
 
-	return Game::Play(row, col);
-}
+// 	return Game::Play(row, col);
+// }
 
 int main() {
 	Game state;

@@ -1,58 +1,39 @@
 #pragma once
-
 #include <array>
-#include <iostream>
 #include <vector>
 
-class Game {
-   public:
-	struct Play {
-		int row = 0;
-		int col = 0;
-		Play() {}
-		Play(int row, int col) {
-			this->row = row;
-			this->col = col;
-		}
-	};
+#include "IGameState.h"
 
-	Game();
-
-	const std::array<std::array<char, 3>, 3>& getBoard() { return board; }
-
-	/**
-	 * @brief Next player to move
-	 *
-	 * @return '-' on start, 'x' or 'o'
-	 */
-	char playerToMove() const { return playerToMove_; }
-
-	std::vector<Play> moves() const;
-
-	void applyMove(Play& m) {
-		board[m.row][m.col] = playerToMove_;
-		playerToMove_ = (playerToMove_ == 'x' ? 'o' : 'x');	 // flip next player
-		lastPlay_ = m;
+struct Play {
+	unsigned int row = 0;
+	unsigned int col = 0;
+	unsigned int subRow = 0;
+	unsigned int subCol = 0;
+	Play() {}
+	Play(unsigned int row, unsigned int col, unsigned int subRow,
+		 unsigned int subCol) {
+		this->row = row;
+		this->col = col;
+		this->subRow = subRow;
+		this->subCol = subCol;
 	}
+};
 
+class Game : IGameState<Play> {
+   public:
+	Game();
+	char playerToMove() const { return playerToMove_; }
+	std::vector<Play> moves() const;
+	void applyMove(Play& p);
 	char winner() const;
-
-	bool isTerminal() const { return winner() != '-' || moves().size() == 0; }
-
+	bool isTerminal() const;
 	Play lastPlay() const { return lastPlay_; }
 
-	friend std::ostream& operator<<(std::ostream& os, Game& g) {
-		for (auto& row : g.getBoard()) {
-			for (auto& col : row) {
-				os << col << " ";
-			}
-			os << std::endl;
-		}
-		return os;
-	}
-
    private:
-	std::array<std::array<char, 3>, 3> board;
-	char playerToMove_ = 'x';
+	using GameBoard =
+		std::array<std::array<std::array<std::array<char, 3>, 3>, 3>, 3>;
+
+	char playerToMove_ = '-';
 	Play lastPlay_;
+	GameBoard board;
 };

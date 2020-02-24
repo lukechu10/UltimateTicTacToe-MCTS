@@ -57,7 +57,7 @@ BestResult MCTS::bestMove(string policy) {
 	// find best child
 	int visitsBest = 0;
 	int winsBest = 0;
-	Game::Play bestPlay;
+	Play bestPlay;
 
 	if (policy == "robust") {
 		for (auto &child : root->getChildren()) {
