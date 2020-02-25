@@ -20,7 +20,7 @@ Node *Node::selectBestChildUCT() {
 }
 
 Node *Node::expand() {
-	Game::Play play = unexpandedNodes[unexpandedNodes.size() - 1];
+	Play play = unexpandedNodes[unexpandedNodes.size() - 1];
 	unexpandedNodes.pop_back();
 	// expand node
 	Game state(this->state);
@@ -36,10 +36,10 @@ char Node::simulate() {
 	Game tempState(this->state);
 
 	while (!tempState.isTerminal()) {
-		vector<Game::Play> moves = tempState.moves();
+		vector<Play> moves = tempState.moves();
 		// pick random move
 		uniform_int_distribution<int> distribution(0, moves.size() - 1);
-		Game::Play move = moves[distribution(generator)];
+		Play move = moves[distribution(generator)];
 		tempState.applyMove(move);	// advance state
 	}
 	return tempState.winner();
