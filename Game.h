@@ -44,7 +44,7 @@ class Game : IGameState<Play, Player> {
 
 	const GameBoard& getBoard() const { return board; }
 
-	friend std::ostream& operator<<(std::ostream& os, Game& g);
+	friend std::ostream& operator<<(std::ostream& os, const Game& g);
 
    private:
 	Player checkGlobalWin() const;

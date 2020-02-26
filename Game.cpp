@@ -10,7 +10,7 @@ ostream& operator<<(ostream& os, const Player& p) {
 			os << "O";
 			break;
 		case Player::None:
-			os << " ";
+			os << "-";
 			break;
 		default:
 			os << " ";
@@ -188,8 +188,5 @@ ostream& operator<<(ostream& os, const Game& g) {
 		}
 		os << '\n';
 	}
-#ifdef _WIN32
-	SetConsoleTextAttribute(hConsole, 7);  // white
-#endif
 	return os;
 }
