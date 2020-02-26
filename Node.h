@@ -11,8 +11,8 @@ class Node {
 
 	Node *selectBestChildUCT();
 	Node *expand();	  // phase 2 - expansion
-	char simulate();  // phase 3 - simulation
-	void backpropagate(char winner);
+	Player simulate();  // phase 3 - simulation
+	void backpropagate(Player winner);
 	int visitCount() { return visits; }
 	double winCount() { return wins; }
 	const Game &getState() { return state; }

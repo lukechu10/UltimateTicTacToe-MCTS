@@ -32,7 +32,7 @@ int main() {
 	int iterations = 0;
 	constexpr int timeout = 50;
 
-	char winner = state.winner();
+	Player winner = state.winner();
 	cout << state << endl;
 	while (!state.isTerminal()) {
 		MCTS mcts(state);

@@ -31,7 +31,7 @@ Node *Node::expand() {
 	return node;
 }
 
-char Node::simulate() {
+Player Node::simulate() {
 	// choose random moves until terminal
 	Game tempState(this->state);
 
@@ -45,11 +45,11 @@ char Node::simulate() {
 	return tempState.winner();
 }
 
-void Node::backpropagate(char winner) {
+void Node::backpropagate(Player winner) {
 	visits++;
-	if ((state.playerToMove() == 'x' ? 'o' : 'x') == winner) {
+	if ((state.playerToMove() == Player::X ? Player::O : Player::X) == winner) {
 		wins++;
-	} else if (winner == '-') {
+	} else if (winner == Player::None) {
 		wins += 0.5;
 	}
 	// backpropagate parent

@@ -1,8 +1,33 @@
 #pragma once
 #include <array>
 #include <vector>
+#include <iostream>
 
 #include "IGameState.h"
+
+enum class Player : char {
+	None = 0,
+	X,
+	O,
+	Full  // for winCache if quadrant has no more availible moves
+};
+
+std::ostream& operator<<(std::ostream& os, const Player& p) {
+	switch (p) {
+		case Player::X:
+			os << "X";
+			break;
+		case Player::O:
+			os << "O";
+			break;
+		case Player::None:
+			os << " ";
+			break;
+		default:
+			os << " ";
+	}
+	return os;
+}
 
 struct Play {
 	unsigned int row = 0;
@@ -19,21 +44,31 @@ struct Play {
 	}
 };
 
-class Game : IGameState<Play> {
+class Game : IGameState<Play, Player> {
    public:
 	Game();
-	char playerToMove() const { return playerToMove_; }
+	Player playerToMove() const { return playerToMove_; }
 	std::vector<Play> moves() const;
 	void applyMove(Play& p);
-	char winner() const;
+	Player winner() const;
 	bool isTerminal() const;
 	Play lastPlay() const { return lastPlay_; }
 
-   private:
-	using GameBoard =
-		std::array<std::array<std::array<std::array<char, 3>, 3>, 3>, 3>;
+	friend std::ostream& operator<<(std::ostream& os, Game& g) {
+		os << "TODO" << std::endl;
+		return os;
+	}
 
-	char playerToMove_ = '-';
+   private:
+	void updateWinCache(unsigned row, unsigned col);
+
+	using GameBoard =
+		std::array<std::array<std::array<std::array<Player, 3>, 3>, 3>, 3>;
+
+	Player playerToMove_ = Player::X; // x starts
+	int nextSubRow = -1;
+	int nextSubCol = -1;
 	Play lastPlay_;
 	GameBoard board;
+	std::array<std::array<Player, 3>, 3> winCache;
 };
