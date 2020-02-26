@@ -1,6 +1,23 @@
 #include "Game.h"
 using namespace std;
 
+ostream& operator<<(ostream& os, const Player& p) {
+	switch (p) {
+		case Player::X:
+			os << "X";
+			break;
+		case Player::O:
+			os << "O";
+			break;
+		case Player::None:
+			os << " ";
+			break;
+		default:
+			os << " ";
+	}
+	return os;
+}
+
 Game::Game() {
 	// initialize all Player values to Player::None
 	for (auto& row : board)
@@ -155,4 +172,24 @@ void Game::updateWinCache(unsigned gRow, unsigned gCol) {
 		}
 	}
 	return;
+}
+
+ostream& operator<<(ostream& os, const Game& g) {
+	for (int row = 0; row < 3; row++) {
+		for (int subRow = 0; subRow < 3; subRow++) {
+			for (int col = 0; col < 3; col++) {
+				for (int subCol = 0; subCol < 3; subCol++) {
+					os << " " << g.getBoard()[row][col][subRow][subCol]
+					   << " ";
+				}
+				os << "  ";
+			}
+			os << '\n';
+		}
+		os << '\n';
+	}
+#ifdef _WIN32
+	SetConsoleTextAttribute(hConsole, 7);  // white
+#endif
+	return os;
 }

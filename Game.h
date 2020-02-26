@@ -12,22 +12,7 @@ enum class Player : char {
 	Full  // for winCache if quadrant has no more availible moves
 };
 
-// std::ostream& operator<<(std::ostream& os, const Player& p) {
-// 	switch (p) {
-// 		case Player::X:
-// 			os << "X";
-// 			break;
-// 		case Player::O:
-// 			os << "O";
-// 			break;
-// 		case Player::None:
-// 			os << " ";
-// 			break;
-// 		default:
-// 			os << " ";
-// 	}
-// 	return os;
-// }
+std::ostream& operator<<(std::ostream& os, const Player& p);
 
 struct Play {
 	unsigned int row = 0;
@@ -45,6 +30,9 @@ struct Play {
 };
 
 class Game : IGameState<Play, Player> {
+	using GameBoard =
+		std::array<std::array<std::array<std::array<Player, 3>, 3>, 3>, 3>;
+
    public:
 	Game();
 	Player playerToMove() const { return playerToMove_; }
@@ -54,17 +42,13 @@ class Game : IGameState<Play, Player> {
 	bool isTerminal() const;
 	Play lastPlay() const { return lastPlay_; }
 
-	friend std::ostream& operator<<(std::ostream& os, Game& g) {
-		os << "TODO" << std::endl;
-		return os;
-	}
+	const GameBoard& getBoard() const { return board; }
+
+	friend std::ostream& operator<<(std::ostream& os, Game& g);
 
    private:
 	Player checkGlobalWin() const;
 	void updateWinCache(unsigned row, unsigned col);
-
-	using GameBoard =
-		std::array<std::array<std::array<std::array<Player, 3>, 3>, 3>, 3>;
 
 	Player playerToMove_ = Player::X;  // x starts
 	int nextSubRow = -1;
