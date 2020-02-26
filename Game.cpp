@@ -23,8 +23,7 @@ Game::Game() {
 	for (auto& row : board)
 		for (auto& col : row)
 			for (auto& subRow : col) subRow.fill(Player::None);
-	for (auto& row : winCache)
-		row.fill(Player::None);
+	for (auto& row : winCache) row.fill(Player::None);
 }
 
 vector<Play> Game::moves() const {
@@ -71,7 +70,7 @@ vector<Play> Game::moves() const {
 	return results;
 }
 
-void Game::applyMove(Play &p) {
+void Game::applyMove(Play& p) {
 	board[p.row][p.col][p.subRow][p.subCol] = playerToMove_;
 	// toggle player to move
 	playerToMove_ = playerToMove_ == Player::X ? Player::O : Player::X;
@@ -84,7 +83,7 @@ void Game::applyMove(Play &p) {
 Player Game::winner() const { return checkGlobalWin(); }
 
 bool Game::isTerminal() const {
-	return checkGlobalWin() == Player::None && moves().size() != 0;
+	return checkGlobalWin() != Player::None && moves().size() == 0;
 }
 
 Player Game::checkGlobalWin() const {
@@ -179,8 +178,7 @@ ostream& operator<<(ostream& os, const Game& g) {
 		for (int subRow = 0; subRow < 3; subRow++) {
 			for (int col = 0; col < 3; col++) {
 				for (int subCol = 0; subCol < 3; subCol++) {
-					os << " " << g.getBoard()[row][col][subRow][subCol]
-					   << " ";
+					os << " " << g.getBoard()[row][col][subRow][subCol] << " ";
 				}
 				os << "  ";
 			}
