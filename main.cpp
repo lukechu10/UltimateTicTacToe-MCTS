@@ -66,7 +66,7 @@ int main() {
 		winner = state.winner();
 	}
 
-	// cout << "Winner: " << winner << endl;
+	cout << "Winner: " << winner << endl;
 
 	cout << "Average simulations in " << timeout << "ms: " << sims / iterations
 		 << endl;
