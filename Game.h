@@ -1,7 +1,7 @@
 #pragma once
 #include <array>
-#include <vector>
 #include <iostream>
+#include <vector>
 
 #include "IGameState.h"
 
@@ -12,22 +12,22 @@ enum class Player : char {
 	Full  // for winCache if quadrant has no more availible moves
 };
 
-std::ostream& operator<<(std::ostream& os, const Player& p) {
-	switch (p) {
-		case Player::X:
-			os << "X";
-			break;
-		case Player::O:
-			os << "O";
-			break;
-		case Player::None:
-			os << " ";
-			break;
-		default:
-			os << " ";
-	}
-	return os;
-}
+// std::ostream& operator<<(std::ostream& os, const Player& p) {
+// 	switch (p) {
+// 		case Player::X:
+// 			os << "X";
+// 			break;
+// 		case Player::O:
+// 			os << "O";
+// 			break;
+// 		case Player::None:
+// 			os << " ";
+// 			break;
+// 		default:
+// 			os << " ";
+// 	}
+// 	return os;
+// }
 
 struct Play {
 	unsigned int row = 0;
@@ -60,12 +60,13 @@ class Game : IGameState<Play, Player> {
 	}
 
    private:
+	Player checkGlobalWin() const;
 	void updateWinCache(unsigned row, unsigned col);
 
 	using GameBoard =
 		std::array<std::array<std::array<std::array<Player, 3>, 3>, 3>, 3>;
 
-	Player playerToMove_ = Player::X; // x starts
+	Player playerToMove_ = Player::X;  // x starts
 	int nextSubRow = -1;
 	int nextSubCol = -1;
 	Play lastPlay_;
