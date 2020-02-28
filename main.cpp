@@ -58,11 +58,16 @@ int main() {
 				 << "\twins: " << searchRes.wins << endl;  // stats
 			cout << "Best Play stats\tvisits: " << play.bestVisits
 				 << "\twins: " << play.bestWins << endl;
-		} catch (exception &e) {
+		} catch (exception& e) {
 			cerr << e.what() << endl;
 		}
 
 		cout << state << endl;
+		// debug
+		for (auto& row : state.getWinCache()) {
+			for (auto& col : row) cout << col;
+			cout << endl;
+		}
 		winner = state.winner();
 	}
 

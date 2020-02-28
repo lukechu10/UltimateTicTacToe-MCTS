@@ -43,6 +43,9 @@ class Game : IGameState<Play, Player> {
 	Play lastPlay() const { return lastPlay_; }
 
 	const GameBoard& getBoard() const { return board; }
+	const std::array<std::array<Player, 3>, 3> getWinCache() const {
+		return winCache;
+	}
 
 	friend std::ostream& operator<<(std::ostream& os, const Game& g);
 

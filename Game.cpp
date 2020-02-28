@@ -12,8 +12,8 @@ ostream& operator<<(ostream& os, const Player& p) {
 		case Player::None:
 			os << "-";
 			break;
-		default:
-			os << " ";
+		case Player::Full:
+			os << "f";
 	}
 	return os;
 }
@@ -77,6 +77,7 @@ void Game::applyMove(Play& p) {
 	nextSubRow = p.subRow;
 	nextSubCol = p.subCol;
 	updateWinCache(p.row, p.col);  // check for win
+	lastPlay_ = p;
 }
 
 Player Game::winner() const { return checkGlobalWin(); }
@@ -164,11 +165,12 @@ void Game::updateWinCache(unsigned gRow, unsigned gCol) {
 	for (auto& row : subBoard) {
 		for (auto& col : row) {
 			if (col == Player::None) {
-				winCache[gRow][gCol] = Player::Full;
+				winCache[gRow][gCol] = Player::None;
 				return;
 			}
 		}
 	}
+	winCache[gRow][gCol] = Player::Full;
 	return;
 }
 
