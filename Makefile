@@ -7,7 +7,7 @@ CPPFLAGS := -Wall -g
 CXXFLAGS := 
 EXECUTABLE := $(OBJ_DIR)/main.out
 
-all: $(EXECUTABLE) run
+all: $(EXECUTABLE)
 
 $(OBJ_DIR)/main.out: $(OBJ_FILES)
 	g++ $(LDFLAGS) -o $@ $^
