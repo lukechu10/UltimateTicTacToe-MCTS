@@ -66,7 +66,6 @@ vector<Play> Game::moves() const {
 			}
 		}
 	}
-
 	return results;
 }
 
@@ -83,7 +82,7 @@ void Game::applyMove(Play& p) {
 Player Game::winner() const { return checkGlobalWin(); }
 
 bool Game::isTerminal() const {
-	return checkGlobalWin() != Player::None && moves().size() == 0;
+	return checkGlobalWin() != Player::None || moves().size() == 0;
 }
 
 Player Game::checkGlobalWin() const {

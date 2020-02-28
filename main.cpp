@@ -43,7 +43,7 @@ int main() {
 		auto diff = timeEnd - timeStart;
 
 		try {
-			// cerr << state.playerToMove();
+			cout << "Player to move: " << state.playerToMove() << endl;
 			auto play = mcts.bestMove("robust");
 
 			iterations++;
