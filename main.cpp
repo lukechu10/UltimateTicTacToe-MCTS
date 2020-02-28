@@ -4,6 +4,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <random>
 
 #include "Game.h"
 #include "MCTS.h"
@@ -24,16 +25,14 @@ using namespace std;
 
 // 	return Game::Play(row, col);
 // }
-
-int main() {
+double sims = 0;
+int iterations = 0;
+constexpr int timeout = 40;
+Player simulateGame() {
 	Game state;
 
-	double sims = 0;
-	int iterations = 0;
-	constexpr int timeout = 50;
-
 	Player winner = state.winner();
-	cout << state << endl;
+	// cout << state << endl;
 	while (!state.isTerminal()) {
 		MCTS mcts(state);
 
@@ -43,37 +42,55 @@ int main() {
 		auto diff = timeEnd - timeStart;
 
 		try {
-			cout << "Player to move: " << state.playerToMove() << endl;
-			auto play = mcts.bestMove("robust");
+			// cout << "Player to move: " << state.playerToMove() << endl;
+			// X is MCTS, O is random
+			if (state.playerToMove() == Player::X) {
+				auto play = mcts.bestMove("robust");
 
-			iterations++;
-			sims += searchRes.visits;
+				iterations++;
+				sims += searchRes.visits;
 
-			state.applyMove(play.bestPlay);
+				state.applyMove(play.bestPlay);
+			} else {
+				auto moves = state.moves();
+				random_device r;
+				default_random_engine generator{r()};
+				uniform_int_distribution<int> distribution(0, moves.size() - 1);
+				state.applyMove(moves[distribution(generator)]);
+			}
 
-			cout << "This move took "
-				 << chrono::duration<double, milli>(diff).count() << "ms"
-				 << endl;  // print benchmark
-			cout << "Root stats\tvisits: " << searchRes.visits
-				 << "\twins: " << searchRes.wins << endl;  // stats
-			cout << "Best Play stats\tvisits: " << play.bestVisits
-				 << "\twins: " << play.bestWins << endl;
+			// cout << "This move took "
+			// 	 << chrono::duration<double, milli>(diff).count() << "ms"
+			// 	 << endl;  // print benchmark
+			// cout << "Root stats\tvisits: " << searchRes.visits
+			// 	 << "\twins: " << searchRes.wins << endl;  // stats
+			// cout << "Best Play stats\tvisits: " << play.bestVisits
+			// 	 << "\twins: " << play.bestWins << endl;
 		} catch (exception& e) {
 			cerr << e.what() << endl;
 		}
 
-		cout << state << endl;
-		// debug
-		for (auto& row : state.getWinCache()) {
-			for (auto& col : row) cout << col;
-			cout << endl;
-		}
+		// cout << state << endl;
+		// // debug
+		// for (auto& row : state.getWinCache()) {
+		// 	for (auto& col : row) cout << col;
+		// 	cout << endl;
+		// }
 		winner = state.winner();
 	}
 
-	cout << "Winner: " << winner << endl;
+	// cout << "Winner: " << winner << endl;
 
-	cout << "Average simulations in " << timeout << "ms: " << sims / iterations
+	return winner;
+}
+
+int main() {
+	for (unsigned i = 0; i < 5; i++) {
+		cout << simulateGame();
+		flush(cout);
+	}
+
+	cout << "\nAverage simulations in " << timeout << "ms: " << sims / iterations
 		 << endl;
 	return 0;
 }
