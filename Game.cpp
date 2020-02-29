@@ -27,46 +27,11 @@ Game::Game() {
 }
 
 vector<Play> Game::moves() const {
-	vector<Play> results;
-
-	// check if subNext == -1 -1 or subWin set
-	if ((nextSubRow == -1 && nextSubCol == -1) ||
-		winCache[nextSubRow][nextSubCol] != Player::None) {
-		// get all tiles availible
-		for (unsigned winRow = 0; winRow < 3; winRow++) {
-			for (unsigned winCol = 0; winCol < 3; winCol++) {
-				if (winCache[winRow][winCol] == Player::None) {
-					// get all empty squares
-					for (unsigned subRow = 0; subRow < 3; subRow++) {
-						for (unsigned subCol = 0; subCol < 3; subCol++) {
-							if (board[winRow][winCol][subRow][subCol] ==
-								Player::None) {
-								results.push_back(
-									Play(winRow, winCol, subRow, subCol));
-							}
-						}
-					}
-					//
-				}
-			}
-		}
+	if (!movesGenerated) {
+		const_cast<Game*>(this)->updateMoveCache();
+		const_cast<Game*>(this)->movesGenerated = true;
 	}
-
-	else {
-		if (winCache[nextSubRow][nextSubCol] == Player::None) {
-			// get moves is winCache[nextSubRow][nextSubCol]
-			for (unsigned row = 0; row < 3; row++) {
-				for (unsigned col = 0; col < 3; col++) {
-					if (board[nextSubRow][nextSubCol][row][col] ==
-						Player::None) {
-						results.push_back(
-							Play(nextSubRow, nextSubCol, row, col));
-					}
-				}
-			}
-		}
-	}
-	return results;
+	return moveCache;
 }
 
 void Game::applyMove(Play& p) {
@@ -78,6 +43,8 @@ void Game::applyMove(Play& p) {
 	nextSubCol = p.subCol;
 	updateWinCache(p.row, p.col);  // check for win
 	lastPlay_ = p;
+	moveCache.clear();
+	movesGenerated = false;	 // moves need to be generated again
 }
 
 Player Game::winner() const { return checkGlobalWin(); }
@@ -171,6 +138,49 @@ void Game::updateWinCache(unsigned gRow, unsigned gCol) {
 		}
 	}
 	winCache[gRow][gCol] = Player::Full;
+	return;
+}
+
+void Game::updateMoveCache() {
+	// check if subNext == -1 -1 or subWin set
+	if ((nextSubRow == -1 && nextSubCol == -1) ||
+		winCache[nextSubRow][nextSubCol] != Player::None) {
+		moveCache.reserve(81);
+		// get all tiles availible
+		for (unsigned winRow = 0; winRow < 3; winRow++) {
+			for (unsigned winCol = 0; winCol < 3; winCol++) {
+				if (winCache[winRow][winCol] == Player::None) {
+					// get all empty squares
+					for (unsigned subRow = 0; subRow < 3; subRow++) {
+						for (unsigned subCol = 0; subCol < 3; subCol++) {
+							if (board[winRow][winCol][subRow][subCol] ==
+								Player::None) {
+								moveCache.push_back(
+									Play(winRow, winCol, subRow, subCol));
+							}
+						}
+					}
+					//
+				}
+			}
+		}
+	}
+
+	else {
+		if (winCache[nextSubRow][nextSubCol] == Player::None) {
+			moveCache.reserve(9);
+			// get moves is winCache[nextSubRow][nextSubCol]
+			for (unsigned row = 0; row < 3; row++) {
+				for (unsigned col = 0; col < 3; col++) {
+					if (board[nextSubRow][nextSubCol][row][col] ==
+						Player::None) {
+						moveCache.push_back(
+							Play(nextSubRow, nextSubCol, row, col));
+					}
+				}
+			}
+		}
+	}
 	return;
 }
 

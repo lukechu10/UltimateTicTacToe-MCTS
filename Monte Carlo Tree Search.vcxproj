@@ -148,12 +148,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="MCTS.cpp" />
-    <ClCompile Include="Monte Carlo Tree Search.cpp" />
     <ClCompile Include="Node.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameBoard.h" />
+    <ClInclude Include="IGameState.h" />
     <ClInclude Include="MCTS.h" />
     <ClInclude Include="Node.h" />
   </ItemGroup>

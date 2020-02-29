@@ -51,7 +51,12 @@ class Game : IGameState<Play, Player> {
 
    private:
 	Player checkGlobalWin() const;
+
 	void updateWinCache(unsigned row, unsigned col);
+
+	void updateMoveCache();
+	std::vector<Play> moveCache; // store moves for current state for reuse
+	bool movesGenerated = false;
 
 	Player playerToMove_ = Player::X;  // x starts
 	int nextSubRow = -1;
