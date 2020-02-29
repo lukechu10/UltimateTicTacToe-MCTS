@@ -4,8 +4,8 @@
 
 struct SearchResult {
 	int visits = 0;
-	int wins = 0;
-	SearchResult(int visits, int wins) {
+	double wins = 0;
+	SearchResult(int visits, double wins) {
 		this->visits = visits;
 		this->wins = wins;
 	}
