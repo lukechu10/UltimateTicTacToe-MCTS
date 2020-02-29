@@ -92,7 +92,7 @@ int main() {
 		cout << simulateGame();
 		flush(cout);
 	}
-
+	
 	cout << "\nAverage simulations on the first turn in " << timeout << ": "
 		 << sims / iterations << "ms" << endl;
 	return 0;
