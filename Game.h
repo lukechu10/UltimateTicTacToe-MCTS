@@ -52,7 +52,7 @@ class Game : IGameState<Play, Player> {
    private:
 	Player checkGlobalWin() const;
 
-	void updateWinCache(unsigned row, unsigned col);
+	void updateWinCache(Play& p);
 
 	void updateMoveCache();
 	std::vector<Play> moveCache; // store moves for current state for reuse

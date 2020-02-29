@@ -41,7 +41,7 @@ void Game::applyMove(Play& p) {
 	// update next sub row
 	nextSubRow = p.subRow;
 	nextSubCol = p.subCol;
-	updateWinCache(p.row, p.col);  // check for win
+	updateWinCache(p);	// check for win
 	lastPlay_ = p;
 	moveCache.clear();
 	movesGenerated = false;	 // moves need to be generated again
@@ -90,41 +90,21 @@ Player Game::checkGlobalWin() const {
 	// Win check
 }
 
-void Game::updateWinCache(unsigned gRow, unsigned gCol) {
+void Game::updateWinCache(Play& p) {
 	// check for win in sub gameboard
-	auto& subBoard = board[gRow][gCol];
-	// Checking for Rows for X or O victory.
-	for (int row = 0; row < 3; row++) {
-		if (subBoard[row][0] == subBoard[row][1] &&
-			subBoard[row][1] == subBoard[row][2] &&
-			subBoard[row][0] != Player::None &&
-			subBoard[row][0] != Player::Full) {
-			winCache[gRow][gCol] = subBoard[row][0];
-			return;
-		}
-	}
+	auto& subBoard = board[p.row][p.col];
 
-	// Checking for Columns for X or O victory.
-	for (int col = 0; col < 3; col++) {
-		if (subBoard[0][col] == subBoard[1][col] &&
-			subBoard[1][col] == subBoard[2][col] &&
-			subBoard[0][col] != Player::None &&
-			subBoard[0][col] != Player::Full) {
-			winCache[gRow][gCol] = subBoard[0][col];
-			return;
-		}
+	int row = 0, col = 0, diag = 0, adiag = 0;	// adiag = anti-diagonal
+	Player player =
+		playerToMove() == Player::X ? Player::O : Player::X;  // previous player
+	for (unsigned i = 0; i < 3; i++) {
+		if (subBoard[p.subRow][i] == player) col++;
+		if (subBoard[i][p.subCol] == player) row++;
+		if (subBoard[i][i] == player) diag++;
+		if (subBoard[i][2 - i] == player) adiag++;
 	}
-
-	// Checking for Diagonals for X or O victory.
-	if (subBoard[0][0] == subBoard[1][1] && subBoard[1][1] == subBoard[2][2] &&
-		subBoard[0][0] != Player::None && subBoard[0][0] != Player::Full) {
-		winCache[gRow][gCol] = subBoard[0][0];
-		return;
-	}
-
-	if (subBoard[0][2] == subBoard[1][1] && subBoard[1][1] == subBoard[2][0] &&
-		subBoard[0][2] != Player::None && subBoard[0][2] != Player::Full) {
-		winCache[gRow][gCol] = subBoard[0][2];
+	if (row == 3 || col == 3 || diag == 3 || adiag == 3) {
+		winCache[p.row][p.col] = player;
 		return;
 	}
 
@@ -132,13 +112,12 @@ void Game::updateWinCache(unsigned gRow, unsigned gCol) {
 	for (auto& row : subBoard) {
 		for (auto& col : row) {
 			if (col == Player::None) {
-				winCache[gRow][gCol] = Player::None;
+				winCache[p.row][p.col] = Player::None;
 				return;
 			}
 		}
 	}
-	winCache[gRow][gCol] = Player::Full;
-	return;
+	winCache[p.row][p.col] = Player::Full;
 }
 
 void Game::updateMoveCache() {

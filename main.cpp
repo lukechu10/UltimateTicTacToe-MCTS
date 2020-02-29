@@ -27,24 +27,24 @@ using namespace std;
 // }
 double sims = 0;
 int iterations = 0;
-constexpr int timeout = 500;
+constexpr int timeout = 5;
 Player simulateGame() {
 	Game state;
 
 	Player winner = state.winner();
-	cout << state << endl;
+	//cout << state << endl;
 	while (!state.isTerminal()) {
-		MCTS mcts(state);
-
-		auto timeStart = chrono::steady_clock::now();
-		SearchResult searchRes = mcts.runSearch(timeout);
-		auto timeEnd = chrono::steady_clock::now();
-		auto diff = timeEnd - timeStart;
-
 		try {
-			cout << "Player to move: " << state.playerToMove() << endl;
+			//cout << "Player to move: " << state.playerToMove() << endl;
 			// X is MCTS, O is random
 			if (state.playerToMove() == Player::X) {
+				MCTS mcts(state);
+
+				auto timeStart = chrono::steady_clock::now();
+				SearchResult searchRes = mcts.runSearch(timeout);
+				auto timeEnd = chrono::steady_clock::now();
+				auto diff = timeEnd - timeStart;
+
 				auto play = mcts.bestMove("robust");
 
 				iterations++;
@@ -52,13 +52,13 @@ Player simulateGame() {
 
 				state.applyMove(play.bestPlay);
 
-				cout << "This move took "
-					 << chrono::duration<double, milli>(diff).count() << "ms"
-					 << endl;  // print benchmark
-				cout << "Root stats\tvisits: " << searchRes.visits
-					 << "\twins: " << searchRes.wins << endl;  // stats
-				cout << "Best Play stats\tvisits: " << play.bestVisits
-					 << "\twins: " << play.bestWins << endl;
+				//cout << "This move took "
+				//	 << chrono::duration<double, milli>(diff).count() << "ms"
+				//	 << endl;  // print benchmark
+				//cout << "Root stats\tvisits: " << searchRes.visits
+				//	 << "\twins: " << searchRes.wins << endl;  // stats
+				//cout << "Best Play stats\tvisits: " << play.bestVisits
+				//	 << "\twins: " << play.bestWins << endl;
 			} else {
 				auto moves = state.moves();
 				random_device r;
@@ -70,22 +70,22 @@ Player simulateGame() {
 			cerr << e.what() << endl;
 		}
 
-		cout << state << endl;
+		//cout << state << endl;
 		// debug
-		for (auto& row : state.getWinCache()) {
+		/*for (auto& row : state.getWinCache()) {
 			for (auto& col : row) cout << col;
 			cout << endl;
-		}
+		}*/
 		winner = state.winner();
 	}
 
-	cout << "Winner: " << winner << endl;
+	//cout << "Winner: " << winner << endl;
 
 	return winner;
 }
 
 int main() {
-	for (unsigned i = 0; i < 1; i++) {
+	for (unsigned i = 0; i < 50; i++) {
 		cout << simulateGame();
 		flush(cout);
 	}
