@@ -27,7 +27,7 @@ using namespace std;
 // }
 double sims = 0;
 int iterations = 0;
-constexpr int timeout = 5;
+constexpr int timeout = 100;
 Player simulateGame() {
 	Game state;
 
@@ -52,13 +52,13 @@ Player simulateGame() {
 
 				state.applyMove(play.bestPlay);
 
-				//cout << "This move took "
-				//	 << chrono::duration<double, milli>(diff).count() << "ms"
-				//	 << endl;  // print benchmark
-				//cout << "Root stats\tvisits: " << searchRes.visits
-				//	 << "\twins: " << searchRes.wins << endl;  // stats
-				//cout << "Best Play stats\tvisits: " << play.bestVisits
-				//	 << "\twins: " << play.bestWins << endl;
+				cout << "This move took "
+					 << chrono::duration<double, milli>(diff).count() << "ms"
+					 << endl;  // print benchmark
+				cout << "Root stats\tvisits: " << searchRes.visits
+					 << "\twins: " << searchRes.wins << endl;  // stats
+				cout << "Best Play stats\tvisits: " << play.bestVisits
+					 << "\twins: " << play.bestWins << endl;
 			} else {
 				auto moves = state.moves();
 				random_device r;
@@ -85,7 +85,7 @@ Player simulateGame() {
 }
 
 int main() {
-	for (unsigned i = 0; i < 50; i++) {
+	for (unsigned i = 0; i < 1; i++) {
 		cout << simulateGame();
 		flush(cout);
 	}

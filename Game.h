@@ -36,7 +36,7 @@ class Game : IGameState<Play, Player> {
    public:
 	Game();
 	Player playerToMove() const { return playerToMove_; }
-	std::vector<Play> moves() const;
+	const std::vector<Play>& moves() const;
 	void applyMove(Play& p);
 	Player winner() const;
 	bool isTerminal() const;

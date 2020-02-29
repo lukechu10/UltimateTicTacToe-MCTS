@@ -26,7 +26,7 @@ Game::Game() {
 	for (auto& row : winCache) row.fill(Player::None);
 }
 
-vector<Play> Game::moves() const {
+const vector<Play>& Game::moves() const {
 	if (!movesGenerated) {
 		const_cast<Game*>(this)->updateMoveCache();
 		const_cast<Game*>(this)->movesGenerated = true;
