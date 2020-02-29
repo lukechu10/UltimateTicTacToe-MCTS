@@ -56,7 +56,7 @@ BestResult MCTS::bestMove(string policy) {
 	}
 	// find best child
 	int visitsBest = 0;
-	int winsBest = 0;
+	double winsBest = 0;
 	Play bestPlay;
 
 	if (policy == "robust") {
