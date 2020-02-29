@@ -154,7 +154,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
-    <ClInclude Include="GameBoard.h" />
     <ClInclude Include="IGameState.h" />
     <ClInclude Include="MCTS.h" />
     <ClInclude Include="Node.h" />
