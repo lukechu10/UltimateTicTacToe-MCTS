@@ -43,7 +43,6 @@ void Game::applyMove(Play& p) {
 	nextSubCol = p.subCol;
 	updateWinCache(p);	// check for win
 	lastPlay_ = p;
-	moveCache.clear();
 	movesGenerated = false;	 // moves need to be generated again
 }
 
@@ -121,6 +120,7 @@ void Game::updateWinCache(Play& p) {
 }
 
 void Game::updateMoveCache() {
+	moveCache.clear();	
 	// check if subNext == -1 -1 or subWin set
 	if ((nextSubRow == -1 && nextSubCol == -1) ||
 		winCache[nextSubRow][nextSubCol] != Player::None) {
@@ -134,7 +134,7 @@ void Game::updateMoveCache() {
 						for (unsigned subCol = 0; subCol < 3; subCol++) {
 							if (board[winRow][winCol][subRow][subCol] ==
 								Player::None) {
-								moveCache.push_back(
+								moveCache.emplace_back(
 									Play(winRow, winCol, subRow, subCol));
 							}
 						}
@@ -153,7 +153,7 @@ void Game::updateMoveCache() {
 				for (unsigned col = 0; col < 3; col++) {
 					if (board[nextSubRow][nextSubCol][row][col] ==
 						Player::None) {
-						moveCache.push_back(
+						moveCache.emplace_back(
 							Play(nextSubRow, nextSubCol, row, col));
 					}
 				}

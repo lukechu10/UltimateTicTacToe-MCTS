@@ -27,15 +27,16 @@ using namespace std;
 // }
 double sims = 0;
 int iterations = 0;
-constexpr int timeout = 100;
+constexpr int timeout = 5;
 Player simulateGame() {
 	Game state;
 
 	Player winner = state.winner();
-	//cout << state << endl;
+	// cout << state << endl;
+	unsigned depth = 0;
 	while (!state.isTerminal()) {
 		try {
-			//cout << "Player to move: " << state.playerToMove() << endl;
+			// cout << "Player to move: " << state.playerToMove() << endl;
 			// X is MCTS, O is random
 			if (state.playerToMove() == Player::X) {
 				MCTS mcts(state);
@@ -47,18 +48,19 @@ Player simulateGame() {
 
 				auto play = mcts.bestMove("robust");
 
-				iterations++;
-				sims += searchRes.visits;
-
+				if (depth < 2) {
+					iterations++;
+					sims += searchRes.visits;
+				}
 				state.applyMove(play.bestPlay);
 
-				cout << "This move took "
-					 << chrono::duration<double, milli>(diff).count() << "ms"
-					 << endl;  // print benchmark
-				cout << "Root stats\tvisits: " << searchRes.visits
-					 << "\twins: " << searchRes.wins << endl;  // stats
-				cout << "Best Play stats\tvisits: " << play.bestVisits
-					 << "\twins: " << play.bestWins << endl;
+				// cout << "This move took "
+				//	 << chrono::duration<double, milli>(diff).count() << "ms"
+				//	 << endl;  // print benchmark
+				// cout << "Root stats\tvisits: " << searchRes.visits
+				//	 << "\twins: " << searchRes.wins << endl;  // stats
+				// cout << "Best Play stats\tvisits: " << play.bestVisits
+				//	 << "\twins: " << play.bestWins << endl;
 			} else {
 				auto moves = state.moves();
 				random_device r;
@@ -66,11 +68,12 @@ Player simulateGame() {
 				uniform_int_distribution<int> distribution(0, moves.size() - 1);
 				state.applyMove(moves[distribution(generator)]);
 			}
+			depth++;
 		} catch (exception& e) {
 			cerr << e.what() << endl;
 		}
 
-		//cout << state << endl;
+		// cout << state << endl;
 		// debug
 		/*for (auto& row : state.getWinCache()) {
 			for (auto& col : row) cout << col;
@@ -79,19 +82,19 @@ Player simulateGame() {
 		winner = state.winner();
 	}
 
-	//cout << "Winner: " << winner << endl;
+	// cout << "Winner: " << winner << endl;
 
 	return winner;
 }
 
 int main() {
-	for (unsigned i = 0; i < 1; i++) {
+	for (unsigned i = 0; i < 50; i++) {
 		cout << simulateGame();
 		flush(cout);
 	}
 
-	cout << "\nAverage simulations in " << timeout
-		 << "ms: " << sims / iterations << endl;
+	cout << "\nAverage simulations on the first turn in " << timeout << ": "
+		 << sims / iterations << "ms" << endl;
 	return 0;
 }
 
