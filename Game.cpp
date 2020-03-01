@@ -1,4 +1,10 @@
 #include "Game.h"
+
+#if defined(WIN32) || defined(_WIN32) || \
+	defined(__WIN32) && !defined(__CYGWIN__)
+#define SHOW_COLORS
+#include <windows.h>
+#endif
 using namespace std;
 
 ostream& operator<<(ostream& os, const Player& p) {
@@ -120,7 +126,7 @@ void Game::updateWinCache(Play& p) {
 }
 
 void Game::updateMoveCache() {
-	moveCache.clear();	
+	moveCache.clear();
 	// check if subNext == -1 -1 or subWin set
 	if ((nextSubRow == -1 && nextSubCol == -1) ||
 		winCache[nextSubRow][nextSubCol] != Player::None) {
@@ -164,9 +170,20 @@ void Game::updateMoveCache() {
 }
 
 ostream& operator<<(ostream& os, const Game& g) {
+#ifdef SHOW_COLORS
+	HANDLE hConsole;
+	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+#endif
 	for (int row = 0; row < 3; row++) {
 		for (int subRow = 0; subRow < 3; subRow++) {
 			for (int col = 0; col < 3; col++) {
+#ifdef SHOW_COLORS
+				if (row == g.nextSubRow && col == g.nextSubCol)
+					SetConsoleTextAttribute(hConsole, 10);	// green
+				else
+					SetConsoleTextAttribute(hConsole, 7);  // white
+#endif
+
 				for (int subCol = 0; subCol < 3; subCol++) {
 					os << " " << g.getBoard()[row][col][subRow][subCol] << " ";
 				}
@@ -176,5 +193,8 @@ ostream& operator<<(ostream& os, const Game& g) {
 		}
 		os << '\n';
 	}
+#ifdef SHOW_COLORS
+	SetConsoleTextAttribute(hConsole, 7);  // white
+#endif
 	return os;
 }
