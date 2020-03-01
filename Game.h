@@ -27,6 +27,10 @@ struct Play {
 		this->subRow = subRow;
 		this->subCol = subCol;
 	}
+	bool operator==(const Play& p) const {
+		return (row == p.row) && (col == p.col) && (subRow == p.subRow) &&
+			   (subCol == p.subCol);
+	}
 };
 
 class Game : IGameState<Play, Player> {
@@ -43,8 +47,11 @@ class Game : IGameState<Play, Player> {
 	Play lastPlay() const { return lastPlay_; }
 
 	const GameBoard& getBoard() const { return board; }
-	const std::array<std::array<Player, 3>, 3> getWinCache() const {
+	const std::array<std::array<Player, 3>, 3>& getWinCache() const {
 		return winCache;
+	}
+	std::pair<int, int> getNextCoor() const {
+		return std::make_pair(nextSubRow, nextSubCol);
 	}
 
 	friend std::ostream& operator<<(std::ostream& os, const Game& g);
@@ -55,7 +62,7 @@ class Game : IGameState<Play, Player> {
 	void updateWinCache(Play& p);
 
 	void updateMoveCache();
-	std::vector<Play> moveCache; // store moves for current state for reuse
+	std::vector<Play> moveCache;  // store moves for current state for reuse
 	bool movesGenerated = false;
 
 	Player playerToMove_ = Player::X;  // x starts
