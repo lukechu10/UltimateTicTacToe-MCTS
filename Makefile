@@ -1,20 +1,24 @@
+COMPILER = g++ # use g++ by default, switch to em++ for emscripten
 SRC_DIR := ./
 OBJ_DIR := ./obj
 SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 LDFLAGS :=
-CPPFLAGS := -Wall -g -Ofast
+CPPFLAGS := -Wall --std=c++17
 CXXFLAGS := 
 EXECUTABLE := $(OBJ_DIR)/main.out
 
 all: $(EXECUTABLE)
 
+em: COMPILER=em++
+em: $(EXECUTABLE)
+
 $(OBJ_DIR)/main.out: $(OBJ_FILES)
-	g++ $(LDFLAGS) -o $@ $^
+	$(COMPILER) $(LDFLAGS) -o $@ $^
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	mkdir -p obj
-	g++ $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+	$(COMPILER) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
 .PHONY: clean
 clean:
