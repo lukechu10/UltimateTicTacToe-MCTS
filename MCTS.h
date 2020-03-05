@@ -4,8 +4,8 @@
 
 struct SearchResult {
 	int visits = 0;
-	int wins = 0;
-	SearchResult(int visits, int wins) {
+	double wins = 0;
+	SearchResult(int visits, double wins) {
 		this->visits = visits;
 		this->wins = wins;
 	}
@@ -14,8 +14,8 @@ struct SearchResult {
 struct BestResult {
 	int bestVisits = 0;
 	int bestWins = 0;
-	Game::Play bestPlay;
-	BestResult(int bestVisits, int bestWins, Game::Play bestPlay) {
+	Play bestPlay;
+	BestResult(int bestVisits, int bestWins, Play bestPlay) {
 		this->bestVisits = bestVisits;
 		this->bestWins = bestWins;
 		this->bestPlay = bestPlay;

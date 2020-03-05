@@ -34,12 +34,12 @@ SearchResult MCTS::runSearch(double timeout) {
 		// run 100 simulations
 		Node *node = traverse();  // phase 1 - selection
 		if (node->fullyExpanded()) {
-			char winner = node->simulate();
+			Player winner = node->simulate();
 			node->backpropagate(winner);
 		}  // backpropagate without expanding
 		else {
 			Node *expandedNode = node->expand();	 // phase 2 - expansion
-			char winner = expandedNode->simulate();	 // phase 3 - simulation
+			Player winner = expandedNode->simulate();	 // phase 3 - simulation
 			expandedNode->backpropagate(winner);
 		}
 		iterations++;
@@ -56,8 +56,8 @@ BestResult MCTS::bestMove(string policy) {
 	}
 	// find best child
 	int visitsBest = 0;
-	int winsBest = 0;
-	Game::Play bestPlay;
+	double winsBest = 0;
+	Play bestPlay;
 
 	if (policy == "robust") {
 		for (auto &child : root->getChildren()) {

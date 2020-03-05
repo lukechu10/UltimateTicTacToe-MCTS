@@ -8,7 +8,7 @@ CPPFLAGS := -Wall --std=c++17
 CXXFLAGS := 
 EXECUTABLE := $(OBJ_DIR)/main.out
 
-all: $(EXECUTABLE) run
+all: $(EXECUTABLE)
 
 em: COMPILER=em++
 em: $(EXECUTABLE)
