@@ -8,4 +8,4 @@ ports:
 
 # List the start up tasks. You can start them in parallel in multiple terminals. See https://www.gitpod.io/docs/config-start-tasks/
 tasks:
-  - command: cd emsdk && ./emsdk install latest && ./emsdk activate latest && source ./emsdk/emsdk_env.sh && cd ..
+  - command: cd emsdk && ./emsdk install latest && ./emsdk activate latest && source ./emsdk_env.sh && cd ..
