@@ -5,6 +5,7 @@
 #include <chrono>
 #include <iostream>
 #include <random>
+#include <algorithm>
 
 #include "Game.h"
 #include "MCTS.h"
