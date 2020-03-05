@@ -4,72 +4,119 @@
 
 #include <chrono>
 #include <iostream>
+#include <random>
 
 #include "Game.h"
 #include "MCTS.h"
 
 using namespace std;
 
-Game::Play getMoveFromInput() {
-	int row, col;
-	cout << "Enter row (1-3):\n";
-	cin >> row;
-	cout << "Enter col (1-3):\n";
-	cin >> col;
+Play getMoveFromInput(const Game& g) {
+	int row, col, subRow, subCol;
+	cout << "Quadrant to play in: " << g.getNextCoor().first << " "
+		 << g.getNextCoor().second << endl;
+	if (g.getNextCoor().first == -1 && g.getNextCoor().second == -1) {
+		cout << "Enter row (1-3):\n";
+		cin >> row;
+		row--;
+		cout << "Enter col (1-3):\n";
+		cin >> col;
+		col--;
+	} else {
+		row = g.getNextCoor().first;
+		col = g.getNextCoor().second;
+	}
+	cout << "Enter sub row (1-3)\n";
+	cin >> subRow;
+	subRow--;
+	cout << "Enter sub col (1-3)\n";
+	cin >> subCol;
+	subCol--;
 
-	if (row < 1 || row > 3 || col < 1 || col > 3) {
+	Play play(row - 1, col - 1, subRow - 1, subCol - 1);
+	auto moves = g.moves();
+	bool valid = true;
+	if (count(moves.begin(), moves.end(), play)) valid = false;
+	if (valid && (row < 0 || row > 2 || col < 0 || col > 2 || subRow < 0 || subRow > 2 ||
+		subCol < 0 || subCol > 2)) {
 		cerr << "Invalid input!\n";
-		return getMoveFromInput();
+		return getMoveFromInput(g);
 	}
 
-	return Game::Play(row, col);
+	return play;
 }
-
-int main() {
+double sims = 0;
+int iterations = 0;
+constexpr int timeout = 800;
+Player simulateGame() {
 	Game state;
 
-	double sims = 0;
-	int iterations = 0;
-	constexpr int timeout = 50;
-
-	char winner = state.winner();
+	Player winner = state.winner();
 	cout << state << endl;
+	unsigned depth = 0;
 	while (!state.isTerminal()) {
-		MCTS mcts(state);
-
-		auto timeStart = chrono::steady_clock::now();
-		SearchResult searchRes = mcts.runSearch(timeout);
-		auto timeEnd = chrono::steady_clock::now();
-		auto diff = timeEnd - timeStart;
-
 		try {
-			// cerr << state.playerToMove();
-			auto play = mcts.bestMove("robust");
+			cout << "Player to move: " << state.playerToMove() << endl;
+			// X is MCTS, O is random
+			if (state.playerToMove() == Player::X) {
+				MCTS mcts(state);
 
-			iterations++;
-			sims += searchRes.visits;
+				auto timeStart = chrono::steady_clock::now();
+				SearchResult searchRes = mcts.runSearch(timeout);
+				auto timeEnd = chrono::steady_clock::now();
+				auto diff = timeEnd - timeStart;
 
-			state.applyMove(play.bestPlay);
+				auto play = mcts.bestMove("robust");
 
-			cout << "This move took "
-				 << chrono::duration<double, milli>(diff).count() << "ms"
-				 << endl;  // print benchmark
-			cout << "Root stats\tvisits: " << searchRes.visits
-				 << "\twins: " << searchRes.wins << endl;  // stats
-			cout << "Best Play stats\tvisits: " << play.bestVisits
-				 << "\twins: " << play.bestWins << endl;
-		} catch (exception &e) {
+				if (depth < 2) {
+					iterations++;
+					sims += searchRes.visits;
+				}
+				state.applyMove(play.bestPlay);
+
+				cout << "This move took "
+					 << chrono::duration<double, milli>(diff).count() << "ms"
+					 << endl;  // print benchmark
+				cout << "Root stats\tvisits: " << searchRes.visits
+					 << "\twins: " << searchRes.wins << endl;  // stats
+				cout << "Best Play stats\tvisits: " << play.bestVisits
+					 << "\twins: " << play.bestWins << endl;
+			} else {
+				/*auto moves = state.moves();
+				random_device r;
+				default_random_engine generator{r()};
+				uniform_int_distribution<int> distribution(0, moves.size() - 1);
+				state.applyMove(moves[distribution(generator)]);*/
+				auto move = getMoveFromInput(state);
+				state.applyMove(move);
+			}
+			depth++;
+		} catch (exception& e) {
 			cerr << e.what() << endl;
 		}
 
 		cout << state << endl;
+		// debug
+		for (auto& row : state.getWinCache()) {
+			for (auto& col : row) cout << col;
+			cout << endl;
+		}
 		winner = state.winner();
 	}
 
-	cout << "Winner: " << winner << endl;
+	// cout << "Winner: " << winner << endl;
 
-	cout << "Average simulations in " << timeout << "ms: " << sims / iterations
-		 << endl;
+	return winner;
+}
+
+int main() {
+	for (unsigned i = 0; i < 50; i++) {
+		cout << simulateGame();
+		flush(cout);
+	}
+
+	cout << "\nAverage simulations on the first turn in " << timeout << ": "
+		 << sims / iterations << "ms" << endl;
 	return 0;
 }
 

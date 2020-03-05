@@ -10,9 +10,9 @@ class Node {
 	static constexpr double C_PARAM = 1.41;	 // sqrt(2)
 
 	Node *selectBestChildUCT();
-	Node *expand();	  // phase 2 - expansion
-	char simulate();  // phase 3 - simulation
-	void backpropagate(char winner);
+	Node *expand();		// phase 2 - expansion
+	Player simulate();	// phase 3 - simulation
+	void backpropagate(Player winner);
 	int visitCount() { return visits; }
 	double winCount() { return wins; }
 	const Game &getState() { return state; }
@@ -24,12 +24,15 @@ class Node {
 	// constructor
 	Node(Node *parent, const Game &state);
 	~Node();
+	// disable copy because copying tree is resource intensive
+	Node(Node const &) = delete;
+	void operator=(Node const &) = delete;
 
    private:
 	Node *parent;
 
 	std::vector<Node *> children;
-	std::vector<Game::Play> unexpandedNodes;
+	std::vector<Play> unexpandedNodes;
 	Game state;
 
 	double wins = 0;
