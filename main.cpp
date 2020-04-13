@@ -116,8 +116,8 @@ int main() {
 		flush(cout);
 	}
 
-	cout << "\nAverage simulations on the first turn in " << timeout << ": "
-		 << sims / iterations << "ms" << endl;
+	cout << "\nAverage simulations on the first turn in " << timeout << "ms: "
+		 << sims / iterations << endl;
 	return 0;
 }
 
