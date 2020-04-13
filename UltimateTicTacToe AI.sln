@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UltimateTicTacToe", "Monte Carlo Tree Search.vcxproj", "{F76B3077-F128-452E-8322-89ED8DBDBA68}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UltimateTicTacToe", "UltimateTicTacToeAI\Monte Carlo Tree Search.vcxproj", "{F76B3077-F128-452E-8322-89ED8DBDBA68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend GUI", "..\Frontend GUI\Frontend GUI.csproj", "{E20B554C-FB0B-466E-A3A0-CC635517C36C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend GUI", "Frontend GUI\Frontend GUI.csproj", "{E20B554C-FB0B-466E-A3A0-CC635517C36C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
