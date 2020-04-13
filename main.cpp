@@ -59,7 +59,7 @@ Player simulateGame() {
 		try {
 			cout << "Player to move: " << state.playerToMove() << endl;
 			// X is MCTS, O is random
-			// if (state.playerToMove() == Player::X) {
+			 if (state.playerToMove() == Player::X) {
 				MCTS mcts(state);
 
 				auto timeStart = chrono::steady_clock::now();
@@ -82,15 +82,15 @@ Player simulateGame() {
 					 << "\twins: " << searchRes.wins << endl;  // stats
 				cout << "Best Play stats\tvisits: " << play.bestVisits
 					 << "\twins: " << play.bestWins << endl;
-			// } else {
-			// 	/*auto moves = state.moves();
-			// 	random_device r;
-			// 	default_random_engine generator{r()};
-			// 	uniform_int_distribution<int> distribution(0, moves.size() - 1);
-			// 	state.applyMove(moves[distribution(generator)]);*/
-			// 	auto move = getMoveFromInput(state);
-			// 	state.applyMove(move);
-			// }
+			 } else {
+			 	auto moves = state.moves();
+			 	random_device r;
+			 	default_random_engine generator{r()};
+			 	uniform_int_distribution<int> distribution(0, moves.size() - 1);
+			 	state.applyMove(moves[distribution(generator)]);
+			 	/*auto move = getMoveFromInput(state);
+			 	state.applyMove(move);*/
+			 }
 			depth++;
 		} catch (exception& e) {
 			cerr << e.what() << endl;
