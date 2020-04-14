@@ -4,6 +4,9 @@
 
 using namespace std;
 
+std::random_device r;
+std::default_random_engine generator{r()};	// random number generator
+
 Node *Node::selectBestChildUCT() {
 	Node *best = nullptr;
 	double bestScore = -INFINITY;

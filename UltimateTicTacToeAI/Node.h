@@ -37,7 +37,4 @@ class Node {
 
 	double wins = 0;
 	int visits = 0;
-
-	std::random_device r;
-	std::default_random_engine generator{r()};	// random number generator
 };

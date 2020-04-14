@@ -2,10 +2,10 @@
 // execution begins and ends there.
 //
 
+#include <algorithm>
 #include <chrono>
 #include <iostream>
 #include <random>
-#include <algorithm>
 
 #include "Game.h"
 #include "MCTS.h"
@@ -38,8 +38,8 @@ Play getMoveFromInput(const Game& g) {
 	auto moves = g.moves();
 	bool valid = true;
 	if (count(moves.begin(), moves.end(), play)) valid = false;
-	if (valid && (row < 0 || row > 2 || col < 0 || col > 2 || subRow < 0 || subRow > 2 ||
-		subCol < 0 || subCol > 2)) {
+	if (valid && (row < 0 || row > 2 || col < 0 || col > 2 || subRow < 0 ||
+				  subRow > 2 || subCol < 0 || subCol > 2)) {
 		cerr << "Invalid input!\n";
 		return getMoveFromInput(g);
 	}
@@ -59,7 +59,7 @@ Player simulateGame() {
 		try {
 			cout << "Player to move: " << state.playerToMove() << endl;
 			// X is MCTS, O is random
-			 if (state.playerToMove() == Player::X) {
+			if (state.playerToMove() == Player::X) {
 				MCTS mcts(state);
 
 				auto timeStart = chrono::steady_clock::now();
@@ -82,15 +82,15 @@ Player simulateGame() {
 					 << "\twins: " << searchRes.wins << endl;  // stats
 				cout << "Best Play stats\tvisits: " << play.bestVisits
 					 << "\twins: " << play.bestWins << endl;
-			 } else {
-			 	auto moves = state.moves();
-			 	random_device r;
-			 	default_random_engine generator{r()};
-			 	uniform_int_distribution<int> distribution(0, moves.size() - 1);
-			 	state.applyMove(moves[distribution(generator)]);
-			 	/*auto move = getMoveFromInput(state);
-			 	state.applyMove(move);*/
-			 }
+			} else {
+				auto moves = state.moves();
+				random_device r;
+				default_random_engine generator{r()};
+				uniform_int_distribution<int> distribution(0, moves.size() - 1);
+				state.applyMove(moves[distribution(generator)]);
+				/*auto move = getMoveFromInput(state);
+				state.applyMove(move);*/
+			}
 			depth++;
 		} catch (exception& e) {
 			cerr << e.what() << endl;
@@ -116,10 +116,14 @@ int main() {
 		flush(cout);
 	}
 
-	cout << "\nAverage simulations on the first turn in " << timeout << "ms: "
-		 << sims / iterations << endl;
+	cout << "\nAverage simulations on the first turn in " << timeout
+		 << "ms: " << sims / iterations << endl;
 	return 0;
 }
+
+//extern "C" {
+__declspec(dllexport) int __stdcall num(int x) { return x + 2; }
+//}
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
